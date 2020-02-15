@@ -62,11 +62,9 @@ int main()
 {
     int  w[13];
     
-    //cout << "Hello World!\n";
     random_device rd;   // non-deterministic generator
     mt19937 gen(rd());  // to seed mersenne twister.
-    uniform_int_distribution<> dist(1, 15); // distribute results between 1 and 6 inclusive.
-
+    uniform_int_distribution<> dist(1, 15); // distribute results between 1 and 15 inclusive.
 
     for (int n = 0; n < NUM_NODES; n++) {
         nodes[n].name = 'A' + n;    //A,B,C,D....
@@ -80,32 +78,6 @@ int main()
         w[idx] = dist(gen);
         NODE_BY_NAME(s[idx]).AddEdge(&NODE_BY_NAME(d[idx]), w[idx] -5);
     }
-
-    //NODE_BY_NAME('A').AddEdge(&NODE_BY_NAME('B'), 3);
-    //NODE_BY_NAME('A').AddEdge(&NODE_BY_NAME('C'), 8);
-    //NODE_BY_NAME('A').AddEdge(&NODE_BY_NAME('E'), -4);
-
-    //NODE_BY_NAME('B').AddEdge(&NODE_BY_NAME('D'), 1);
-    //NODE_BY_NAME('B').AddEdge(&NODE_BY_NAME('E'), 7);
-    //
-    //NODE_BY_NAME('C').AddEdge(&NODE_BY_NAME('B'), 4);
-
-    //NODE_BY_NAME('D').AddEdge(&NODE_BY_NAME('C'), -5);
-    //NODE_BY_NAME('D').AddEdge(&NODE_BY_NAME('A'), 2);
-    //NODE_BY_NAME('E').AddEdge(&NODE_BY_NAME('D'), 6);
-
-    //NODE_BY_NAME('A').AddEdge(&NODE_BY_NAME('B'), 8);
-    ////NODE_BY_NAME('A').AddEdge(&NODE_BY_NAME('C'), 6);
-    //NODE_BY_NAME('A').AddEdge(&NODE_BY_NAME('D'), 1);
-
-
-    //NODE_BY_NAME('B').AddEdge(&NODE_BY_NAME('C'), 1);
-    ////NODE_BY_NAME('B').AddEdge(&NODE_BY_NAME('D'), 4);
-
-    //NODE_BY_NAME('C').AddEdge(&NODE_BY_NAME('A'), 4);
-    //NODE_BY_NAME('D').AddEdge(&NODE_BY_NAME('B'), 2);
-    //NODE_BY_NAME('D').AddEdge(&NODE_BY_NAME('C'), 9);
-
                              //row      //col
     int d0Matrix[NUM_NODES+1][NUM_NODES][NUM_NODES];
     for (int i = 0; i < NUM_NODES; i++) {
@@ -133,14 +105,12 @@ int main()
                 else if ((j == (k - 1)) || (i == (k - 1))) {    //current row and column
                     d0Matrix[k][i][j] = d0Matrix[k - 1][i][j];
                 }
-                else {  // i != j fo sho
-                    //Dk[i,j] = D(k-1)[i,j], D(k-1)[i,k] + D(k-1)[k,j]
+                else {  // i != j for sure
+                    //Dk[i,j] = MIN(D(k-1)[i,j], D(k-1)[i,k] + D(k-1)[k,j])
                     int a = d0Matrix[k - 1][i][j];
                     int b = d0Matrix[k - 1][i][k-1];
                     int c = d0Matrix[k - 1][k-1][j];
  
-
-                    //represent INF as '+'
                     if (a == INF) {   //is a INF?
                         if ((b != INF) && (c != INF)) {
                             d0Matrix[k][i][j] = b + c;
